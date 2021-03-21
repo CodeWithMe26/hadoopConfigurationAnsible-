@@ -1,0 +1,39 @@
+ - hosts: 192.168.43.75
+   tasks: 
+    - command: "rpm -i hadoop-1.2.1-1.x86_64.rpm --force"
+    - command: "rpm -i jdk-8u171-linux-x64.rpm --force"
+    - file: 
+        dest: /nn
+        state: directory
+    - template: 
+        dest: /etc/hadoop/hdfs-site.xml 
+        src: /etc/Ansible/hdfs-site.xml
+    - template: 
+        dest: /etc/hadoop/core-site.xml
+        src: /etc/Ansible/core-site.xml
+    - command: "hadoop namenode -format -force"
+    - command: "hadoop-daemon.sh start namenode"
+    - firewalld: 
+        port: "9001/tcp"
+        state: enabled
+        permanent: yes
+        immediate: yes	
+ - hosts: 192.168.43.91
+   tasks: 
+    - command: "rpm -i hadoop-1.2.1-1.x86_64.rpm --force"
+    - command: "rpm -i jdk-8u171-linux-x64.rpm --force"
+    - file: 
+        dest: /dn
+        state: directory
+    - template: 
+        dest: hdfs-site.xml
+        src: /etc/Ansible/hdfsSite.xml
+    - template: 
+        dest: /etc/hadoop/core-site.xml
+        src: /etc/Ansible/core-site.xml	
+    - command: "hadoop-daemon.sh start datanode"
+    - firewalld: 
+        port: "9001/tcp"
+        state: enabled
+        permanent: yes
+        immediate: yes
